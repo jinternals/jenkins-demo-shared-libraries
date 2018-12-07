@@ -100,10 +100,11 @@ local.properties
 .idea/**/encodings.xml
 .idea/**/misc.xml
 .idea/**/compiler.xml
+.idea/**/modules.xml
 .idea/**/vcs.xml
 .idea/**/libraries
 .idea/**/modules
-
+*.iml
 # Gradle and Maven with auto-import
 # When using Gradle or Maven with auto-import, you should exclude module files,
 # since they will be recreated, and may cause churn.  Uncomment if using
