@@ -20,7 +20,9 @@ def call(Map pipelineParams) {
             stage('Determine version') {
                 steps {
                     script {
-                        currentBuild.displayName = "# Some version"
+                        def version = getBuildTag()
+
+                        currentBuild.displayName = "# ${version}"
                     }
                 }
             }
