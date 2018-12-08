@@ -5,15 +5,14 @@ import java.nio.charset.Charset
 import static com.lesfurets.jenkins.unit.MethodSignature.method
 import static org.assertj.core.api.Assertions.assertThat
 
-class UtilsTest extends BasePipelineTest {
+class GenerateVersion extends BasePipelineTest {
 
-    def utils
+    def generateVersion
 
     @Before
     void setUp() {
         super.setUp()
-        // load getCommitHash
-        utils = loadScript("src/com/jinternals/Utils.groovy")
+        generateVersion = loadScript("vars/generateVersion.groovy")
     }
 
     @Test
@@ -23,7 +22,7 @@ class UtilsTest extends BasePipelineTest {
             return Files.contentOf(new File(file), Charset.forName("UTF-8"))
         })
         // when
-        def pomVersion = utils.generateVersion(pom: 'src/test/resources/test-pom.xml')
+        def pomVersion = generateVersion(pom: 'src/test/resources/test-pom.xml')
 
         // then
         assertThat(pomVersion)
