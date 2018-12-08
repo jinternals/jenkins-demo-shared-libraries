@@ -19,7 +19,9 @@ def call(Map pipelineParams) {
 
             stage('Determine version') {
                 steps {
-                    currentBuild.displayName = "# Some version"
+                    script {
+                        currentBuild.displayName = "# Some version"
+                    }
                 }
             }
 
