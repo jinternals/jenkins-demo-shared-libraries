@@ -8,14 +8,19 @@ def call(Map pipelineParams) {
             jdk 'jdk8'
         }
 
+        environment {
+            branch = pipelineParams.branch
+            scmUrl = pipelineParams.gitUrl
+            alertEmail = pipelineParams.email
+        }
+
         stages {
 
             stage('Checkout Git') {
                 steps {
-                    git branch: pipelineParams.branch, url: pipelineParams.gitUrl
+                    git branch: branch, url: gitUrl
                 }
             }
-
 
             stage('Determine version') {
                 steps {
@@ -38,7 +43,7 @@ def call(Map pipelineParams) {
         post {
 
             failure {
-                mail to: pipelineParams.email, subject: 'Pipeline failed', body: "${env.BUILD_URL}"
+                mail to: alertEmail , subject: 'Pipeline failed', body: "${env.BUILD_URL}"
             }
 
         }
