@@ -22,7 +22,7 @@ class GenerateVersion extends BasePipelineTest {
             return Files.contentOf(new File(file), Charset.forName("UTF-8"))
         })
         // when
-        def pomVersion = generateVersion(pom: 'src/test/resources/test-pom.xml')
+        def pomVersion = generateVersion(pom: 'test/resources/test-pom.xml')
 
         // then
         assertThat(pomVersion)

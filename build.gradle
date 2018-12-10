@@ -46,10 +46,18 @@ test {
 sourceSets {
     main {
         groovy {
-            srcDirs = ['vars']
+            srcDirs = ['src','vars']
         }
         resources {
             srcDirs = ['resources']
+        }
+    }
+    test {
+        groovy {
+            srcDirs = ['test/groovy']
+        }
+        resources {
+            srcDirs = ['test/resources']
         }
     }
 }

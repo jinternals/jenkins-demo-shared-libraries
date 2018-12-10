@@ -1,4 +1,11 @@
-def call(Map pipelineParams) {
+def call(body) {
+
+    // evaluate the body block, and collect configuration into the object
+    def pipelineParams= [:]
+    body.resolveStrategy = Closure.DELEGATE_FIRST
+    body.delegate = pipelineParams
+    body()
+
 
     pipeline {
         agent any
@@ -19,17 +26,13 @@ def call(Map pipelineParams) {
 
             stage('Determine version') {
                 steps {
-                    script {
-                        def version = generateVersion(pom: 'pom.xml')
-
-                        currentBuild.displayName = "# ${version}"
-                    }
+                     generateVersion(pom: 'pom.xml')
                 }
             }
 
             stage('Build') {
                 steps {
-                    sh 'mvn clean package -DskipTests=true'
+                    sh 'mvn clean package'
                 }
             }
 
