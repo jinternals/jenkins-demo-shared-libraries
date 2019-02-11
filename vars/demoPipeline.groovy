@@ -22,6 +22,7 @@ def call(Map pipelineParams) {
             stage('Determine version') {
                 steps {
                      sh "cd ./sources"
+		     sh "pwd"
                      generateVersion(pom: 'pom.xml')
                 }
             }
