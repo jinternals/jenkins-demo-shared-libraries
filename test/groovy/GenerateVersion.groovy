@@ -26,6 +26,6 @@ class GenerateVersion extends BasePipelineTest {
 
         // then
         assertThat(pomVersion)
-                .isEqualTo("1.0")
+                .isEqualTo("1.0.0")
     }
 }
