@@ -27,11 +27,25 @@ def call(Map pipelineParams) {
                 }
             }
 
+            stage("Run Test"){
+                steps{
+                    dir("sources"){
+                        sh 'mvn clean test'
+                    }
+                }
+            }
+
             stage('Build') {
                 steps {
                     dir("sources"){
                         sh 'mvn clean package'
                     }
+                }
+            }
+
+            stage('Publish Artifacts'){
+                steps{
+
                 }
             }
 
