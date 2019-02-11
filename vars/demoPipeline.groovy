@@ -14,15 +14,13 @@ def call(Map pipelineParams) {
                 steps {
                     sh "rm -rf sources"
                     sh "git clone ${pipelineParams.gitUrl} --branch ${pipelineParams.branch} --single-branch sources"
-                    sh "cd ./sources"
+                    sh "cd sources/"
                 }
             }
 
 
             stage('Determine version') {
                 steps {
-                     sh "cd ./sources"
-		     sh "pwd"
                      generateVersion(pom: 'pom.xml')
                 }
             }
