@@ -45,7 +45,7 @@ def call(Map pipelineParams) {
 
             stage('Publish Artifacts'){
                 steps{
-
+                    sh "echo todo"
                 }
             }
 
