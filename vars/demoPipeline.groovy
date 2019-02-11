@@ -21,13 +21,17 @@ def call(Map pipelineParams) {
 
             stage('Determine version') {
                 steps {
-                     generateVersion(pom: 'pom.xml')
+                    dir("sources") {
+                        generateVersion(pom: 'pom.xml')
+                    }
                 }
             }
 
             stage('Build') {
                 steps {
-                    sh 'mvn clean package'
+                    dir("sources"){
+                        sh 'mvn clean package'
+                    }
                 }
             }
 
