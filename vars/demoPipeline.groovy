@@ -12,7 +12,7 @@ def call(Map pipelineParams) {
 
             stage('Checkout Git') {
                 steps {
-                    git branch: pipelineParams.branch, url: pipelineParams.gitUrl
+                    sh "git clone ${pipelineParams.gitUrl} --branch ${pipelineParams.branch} --single-branch"
                 }
             }
 
