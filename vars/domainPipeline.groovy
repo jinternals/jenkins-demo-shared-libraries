@@ -22,7 +22,6 @@ def call(Map pipelineParams) {
                         sh "git tag ${versionNumber}"
                         sh "GIT_ASKPASS=true git push origin ${versionNumber}"
                       }
-                    }
                  } catch(err) {
                         echo "Exception thrown:\n ${err}"
                         echo "Stacktrace:"
