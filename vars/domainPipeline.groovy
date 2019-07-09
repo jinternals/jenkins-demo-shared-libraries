@@ -10,7 +10,8 @@ def call(Map pipelineParams) {
         node(label) {
              stage('Checkout') {
                 git credentialsId: 'github', url: "${pipelineParams.gitUrl}"
-                 
+             } 
+            stage('Determine Version') {
                 versionNumber = generateVersion(pom: 'pom.xml')
                  
                 echo "Generated new tag ${versionNumber}"
