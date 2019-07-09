@@ -9,7 +9,7 @@ def call(Map pipelineParams) {
 
         node(label) {
              stage('Get a Maven project') {
-                git '${pipelineParams.gitUrl}'
+                git "${pipelineParams.gitUrl}"
                 container('maven') {
                     stage('Build a Maven project') {
                         sh 'mvn -B clean install'
