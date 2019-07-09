@@ -8,9 +8,18 @@ def call(Map pipelineParams) {
     ]) {
 
         node(label) {
-             stage('Get a Maven project') {
+             stage('Checkout') {
                 git "${pipelineParams.gitUrl}"
-                generateVersion(pom: 'pom.xml')
+                 
+                versionNumber = generateVersion(pom: 'pom.xml')
+                 
+                echo "Generated new tag ${versionNumber}"
+                
+                sh "git tag ${versionNumber}"
+                 
+                sh "git push origin ${versionNumber}"
+
+                 
                 container('maven') {
                     stage('Build a Maven project') {
                         sh 'mvn -B clean install'
