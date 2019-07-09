@@ -9,7 +9,7 @@ def call(Map pipelineParams) {
 
         node(label) {
              stage('Checkout') {
-                git "${pipelineParams.gitUrl}"
+                git credentialsId: 'github', url: "${pipelineParams.gitUrl}"
                  
                 versionNumber = generateVersion(pom: 'pom.xml')
                  
