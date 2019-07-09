@@ -15,10 +15,17 @@ def call(Map pipelineParams) {
                  
                 echo "Generated new tag ${versionNumber}"
                 
-                sh "git tag ${versionNumber}"
-                 
-                sh "git push origin ${versionNumber}"
-
+                 try {
+                      withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'github', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
+                        sh "git config credential.username ${env.GIT_USERNAME}"
+                        sh "git config credential.helper '!echo password=\$GIT_PASSWORD; echo'"
+                        sh "git tag ${versionNumber}"
+                        sh "GIT_ASKPASS=true git push origin ${versionNumber}"
+                      }
+                    } finally {
+                        sh "git config --unset credential.username"
+                        sh "git config --unset credential.helper"
+                    }
                  
                 container('maven') {
                     stage('Build a Maven project') {
