@@ -1,6 +1,6 @@
 def call(Map pipelineParams) {
 
-    def label = "mypod-${UUID.randomUUID().toString()}"
+    def label = "jenkins-slave-${UUID.randomUUID().toString()}"
 
     podTemplate(label: label, containers: [
         containerTemplate(name: 'maven', image: 'maven:3.3.9-jdk-8-alpine', ttyEnabled: true, command: 'cat')
