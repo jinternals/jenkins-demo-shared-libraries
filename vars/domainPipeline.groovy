@@ -7,8 +7,8 @@ def call(Map pipelineParams) {
     ]) {
 
         node(label) {
-            stage('Get a Maven project') {
-                git '${pipelineParams.gitUrl}', branch '${pipelineParams.branch}'
+             stage('Get a Maven project') {
+                git 'https://github.com/jenkinsci/kubernetes-plugin.git'
                 container('maven') {
                     stage('Build a Maven project') {
                         sh 'mvn -B clean install'
