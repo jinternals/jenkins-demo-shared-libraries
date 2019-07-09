@@ -22,7 +22,14 @@ def call(Map pipelineParams) {
                         sh "git tag ${versionNumber}"
                         sh "GIT_ASKPASS=true git push origin ${versionNumber}"
                       }
-                    } finally {
+                    }
+                 } catch(err) {
+                        echo "Exception thrown:\n ${err}"
+                        echo "Stacktrace:"
+                        err.printStackTrace()
+                        currentBuild.result = 'FAILURE'
+                    }
+             finally {
                         sh "git config --unset credential.username"
                         sh "git config --unset credential.helper"
                     }
