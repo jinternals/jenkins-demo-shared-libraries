@@ -26,8 +26,6 @@ def call(Map opts = [:]) {
             def minorVersion = (semver.group('minor') ?: 0) as int
             def patchVersion = ((semver.group('patch') ?: 0) as int) + 1
 
-            echo "Testing to see if current POM version ${pomVersion} is semver compatible"
-
             def newVersion = "${majorVersion}.${minorVersion}.${patchVersion}"
             echo "New version is ${newVersion}"
             return newVersion
