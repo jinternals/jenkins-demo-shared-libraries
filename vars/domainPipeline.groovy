@@ -17,7 +17,7 @@ def call(Map pipelineParams) {
         node(label) {
 
             stage('Checkout') {
-                git credentialsId: 'github', url: "${pipelineParams.gitUrl}"
+                git branch:  "${pipelineParams.gitBranch}", credentialsId: "${pipelineParams.gitCredentialId}", url: "${pipelineParams.gitRepository}"
             }
 
             stage('Determine Version') {
