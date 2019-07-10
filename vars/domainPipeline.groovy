@@ -15,11 +15,11 @@ def call(Map pipelineParams) {
             ]) {
 
         node(label) {
-            
+
             stage('Checkout') {
                 git credentialsId: 'github', url: "${pipelineParams.gitUrl}"
             }
-            
+
             stage('Determine Version') {
                 versionNumber = generateVersion(pom: 'pom.xml')
 
@@ -37,19 +37,18 @@ def call(Map pipelineParams) {
                     sh "git config --unset credential.username"
                     sh "git config --unset credential.helper"
                 }
-
+            }
+            
+            stage('Build Artifacts') {
                 container('maven') {
-                    
-                    stage('Build Artifacts') {
-                        sh "mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${versionNumber}"
-                        sh "mvn clean package"
-                    }
-                    
-                    
-                    stage('Publish Artifacts') {
-                        //sh "mvn dependency:purge-local-repository -DactTransitively=false -DreResolve=false --fail-at-end"
-                    }
-                    
+                    sh "mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${versionNumber}"
+                    sh "mvn clean package"
+                }
+            }
+            
+            stage('Publish Artifacts') {
+                container('maven') {
+                    //sh "mvn dependency:purge-local-repository -DactTransitively=false -DreResolve=false --fail-at-end"
                 }
             }
         }
