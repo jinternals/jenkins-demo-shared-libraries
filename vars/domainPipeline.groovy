@@ -48,6 +48,11 @@ def call(Map pipelineParams) {
                         sh "mvn -B clean install"
                     }
                     
+                    
+                    stage('Clean artifacts') {
+                        sh "mvn clean"
+                    }
+                    
                 }
             }
         }
