@@ -4,7 +4,10 @@ def call(Map pipelineParams) {
 
     podTemplate(label: label, containers: [
             containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:latest', args: '${computer.jnlpmac} ${computer.name}'),
-            containerTemplate(name: 'maven', image: 'maven:3.5-jdk-8', ttyEnabled: true, command: 'cat')
+            containerTemplate(name: 'maven', image: 'maven:3.5-jdk-8', ttyEnabled: true, command: 'cat')], 
+    volumes:[
+        hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock'),
+        hostPathVolume(hostPath: '/root/.m2', mountPath: '/root/.m2')
     ]) {
 
         node(label) {
