@@ -23,7 +23,7 @@ def call(Map pipelineParams) {
             stage('Determine Version') {
                 versionNumber = generateVersion(pom: 'pom.xml')
 
-                echo "Generated new tag ${versionNumber}"
+                currentBuild.displayName = "# ${versionNumber}"
 
                 try {
                     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'github', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
@@ -32,9 +32,6 @@ def call(Map pipelineParams) {
                         sh "git tag ${versionNumber}"
                         sh "GIT_ASKPASS=true git push origin ${versionNumber}"
                     }
-                }
-                catch (Exception err) {
-                    currentBuild.result = 'FAILURE'
                 }
                 finally {
                     sh "git config --unset credential.username"
