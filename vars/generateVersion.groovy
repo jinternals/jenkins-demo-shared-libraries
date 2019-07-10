@@ -8,7 +8,7 @@ def call(Map opts = [:]) {
 
      try {
        // if the repo has no tags this command will fail
-         sh "git tag  -l --merged master --sort='-*authordate' | head -n1 > version.tmp"
+         sh "git tag --sort version:refname | tail -n1 > version.tmp"
          def previousVersion = readFile 'version.tmp'
          echo 'found previous tagged version ' + previousVersion
          
