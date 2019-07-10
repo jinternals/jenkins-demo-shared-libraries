@@ -50,7 +50,8 @@ def call(Map pipelineParams) {
                     
                     
                     stage('Clean Artifacts') {
-                        sh "mvn clean"
+                        sh "mvn dependency:purge-local-repository -DactTransitively=false -DreResolve=false --fail-at-end"
+"
                     }
                     
                 }
