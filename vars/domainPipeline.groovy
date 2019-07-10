@@ -23,10 +23,14 @@ def call(Map pipelineParams) {
                         sh "git tag ${versionNumber}"
                         sh "GIT_ASKPASS=true git push origin ${versionNumber}"
                       }
-                 } finally {
-                        sh "git config --unset credential.username"
-                        sh "git config --unset credential.helper"
-                    }
+                 } 
+                 catch (Exception err) {
+                    currentBuild.result = 'FAILURE'
+                 }
+                 finally {
+                    sh "git config --unset credential.username"
+                    sh "git config --unset credential.helper"
+                 }
                  
                 container('maven') {
                     stage('Build a Maven project') {
