@@ -43,13 +43,13 @@ def call(Map pipelineParams) {
 
                 container('maven') {
                     
-                    stage('Build') {
+                    stage('Build Artifacts') {
                         sh "mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${versionNumber}"
                         sh "mvn -B clean install"
                     }
                     
                     
-                    stage('Clean artifacts') {
+                    stage('Clean Artifacts') {
                         sh "mvn clean"
                     }
                     
