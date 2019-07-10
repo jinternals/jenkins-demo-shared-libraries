@@ -49,9 +49,4 @@ def call(Map opts = [:]) {
                 return previousReleaseVersion.substring(0, previousReleaseVersion.lastIndexOf('.')+1) + (microVersion+1)
             }
         }
-
-        currentBuild.displayName = "# ${version}"
-
-    return version
-
 }
