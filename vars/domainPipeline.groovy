@@ -59,7 +59,7 @@ def call(Map pipelineParams) {
                 container ('docker') {
                     def repository = "${pipelineParams.dockerRepository}"
 
-                     withDockerRegistry(credentialsId: 'dockerhub', url: "${pipelineParams.dockerRegistry}") {
+                     withDockerRegistry(credentialsId: "${pipelineParams.dockerCredentialId}", url: "${pipelineParams.dockerRegistry}") {
                         sh "docker build -t ${repository}:${versionNumber} -f target/docker-resources/Dockerfile target/"
                         sh "docker push ${repository}:${versionNumber}"
                     }
