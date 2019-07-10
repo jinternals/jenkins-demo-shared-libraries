@@ -60,7 +60,7 @@ def call(Map pipelineParams) {
                     def repository = "${pipelineParams.dockerRepository}"
 
                      withDockerRegistry(credentialsId: "${pipelineParams.dockerCredentialId}", url: "${pipelineParams.dockerRegistry}") {
-                        sh "docker build -t ${repository}:${versionNumber} -f target/docker-resources/Dockerfile target/"
+                        sh "docker build -t ${repository}:${versionNumber} -t ${repository}:latest  -f target/docker-resources/Dockerfile target/"
                         sh "docker push ${repository}:${versionNumber}"
                     }
                 }
