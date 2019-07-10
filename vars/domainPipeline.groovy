@@ -26,14 +26,14 @@ def call(Map pipelineParams) {
                 currentBuild.displayName = "# ${versionNumber}"
 
                 try {
-                    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'github', 
+                    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'github',
                                       usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
-                        
+
                         sh "git config credential.username ${env.GIT_USERNAME}"
                         sh "git config credential.helper '!f() { echo password=\$GIT_PASSWORD; }; f'"
                         sh "git tag ${versionNumber}"
                         sh "GIT_ASKPASS=true git push origin ${versionNumber}"
-                        
+
                     }
                 }
                 finally {
@@ -59,10 +59,7 @@ def call(Map pipelineParams) {
                 container ('docker') {
                     def repository = "${pipelineParams.dockerRepository}"
 
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub',
-                            usernameVariable: 'REGISTRY_USER', passwordVariable: 'REGISTRY_PASSWORD')]) {
-
-                        sh "docker login -u=$REGISTRY_USER -p=$REGISTRY_PASSWORD"
+                     withDockerRegistry(credentialsId: 'dockerhub', url: "${pipelineParams.dockerRegistry}") {
                         sh "docker build -t ${repository}:${versionNumber} -f target/docker-resources/Dockerfile target/"
                         sh "docker push ${repository}:${versionNumber}"
                     }
