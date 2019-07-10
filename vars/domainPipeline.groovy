@@ -26,11 +26,14 @@ def call(Map pipelineParams) {
                 currentBuild.displayName = "# ${versionNumber}"
 
                 try {
-                    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'github', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
+                    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'github', 
+                                      usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
+                        
                         sh "git config credential.username ${env.GIT_USERNAME}"
                         sh "git config credential.helper '!f() { echo password=\$GIT_PASSWORD; }; f'"
                         sh "git tag ${versionNumber}"
                         sh "GIT_ASKPASS=true git push origin ${versionNumber}"
+                        
                     }
                 }
                 finally {
@@ -38,17 +41,31 @@ def call(Map pipelineParams) {
                     sh "git config --unset credential.helper"
                 }
             }
-            
+
             stage('Build Artifacts') {
                 container('maven') {
                     sh "mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${versionNumber}"
                     sh "mvn clean package"
                 }
             }
-            
+
             stage('Publish Artifacts') {
                 container('maven') {
                     //sh "mvn dependency:purge-local-repository -DactTransitively=false -DreResolve=false --fail-at-end"
+                }
+            }
+
+            stage ('Docker build and push') {
+                container ('docker') {
+                    def repository = "${pipelineParams.dockerRepository}"
+
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub',
+                            usernameVariable: 'REGISTRY_USER', passwordVariable: 'REGISTRY_PASSWORD')]) {
+
+                        sh "docker login -u=$REGISTRY_USER -p=$REGISTRY_PASSWORD"
+                        sh "docker build -t ${repository}:${versionNumber} ."
+                        sh "docker push ${repository}:${versionNumber}"
+                    }
                 }
             }
         }
