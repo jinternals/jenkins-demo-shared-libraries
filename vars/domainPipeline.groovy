@@ -63,7 +63,7 @@ def call(Map pipelineParams) {
                             usernameVariable: 'REGISTRY_USER', passwordVariable: 'REGISTRY_PASSWORD')]) {
 
                         sh "docker login -u=$REGISTRY_USER -p=$REGISTRY_PASSWORD"
-                        sh "docker build -t ${repository}:${versionNumber} ."
+                        sh "docker build -t ${repository}:${versionNumber} -f target/docker-resources/Dockerfile ."
                         sh "docker push ${repository}:${versionNumber}"
                     }
                 }
