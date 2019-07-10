@@ -45,12 +45,12 @@ def call(Map pipelineParams) {
                     
                     stage('Build Artifacts') {
                         sh "mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${versionNumber}"
-                        sh "mvn -B clean install"
+                        sh "mvn clean package"
                     }
                     
                     
-                    stage('Clean Artifacts') {
-                        sh "mvn dependency:purge-local-repository -DactTransitively=false -DreResolve=false --fail-at-end"
+                    stage('Publish Artifacts') {
+                        //sh "mvn dependency:purge-local-repository -DactTransitively=false -DreResolve=false --fail-at-end"
                     }
                     
                 }
