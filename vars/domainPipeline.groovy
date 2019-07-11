@@ -17,15 +17,17 @@ def call(Map pipelineParams) {
         node(label) {
 
             stage('Checkout') {
-                git branch:  "${pipelineParams.gitBranch}", credentialsId: "${pipelineParams.gitCredentialId}", url: "${pipelineParams.gitRepository}"
+                try {
+                    git branch:  "${pipelineParams.gitBranch}", credentialsId: "${pipelineParams.gitCredentialId}", url: "${pipelineParams.gitRepository}"
+                } catch (e) {
+                    throw e;
+                }
             }
 
             stage('Determine Version') {
-                versionNumber = generateVersion(pom: 'pom.xml')
-
-                currentBuild.displayName = "# ${versionNumber}"
-
                 try {
+                    versionNumber = generateVersion(pom: 'pom.xml')
+                    currentBuild.displayName = "# ${versionNumber}"
                     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'github',
                                       usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
 
@@ -33,12 +35,9 @@ def call(Map pipelineParams) {
                         sh "git config credential.helper '!f() { echo password=\$GIT_PASSWORD; }; f'"
                         sh "git tag ${versionNumber}"
                         sh "GIT_ASKPASS=true git push origin ${versionNumber}"
-
                     }
-                }
-                finally {
-                    sh "git config --unset credential.username"
-                    sh "git config --unset credential.helper"
+                } catch (e) {
+                    throw e;
                 }
             }
 
