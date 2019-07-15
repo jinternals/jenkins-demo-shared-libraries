@@ -4,6 +4,7 @@ def call(Map pipelineParams) {
 
     podTemplate(
             label: label,
+            cloud: 'jenkins'
             containers: [
                     containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:latest', args: '${computer.jnlpmac} ${computer.name}'),
                     containerTemplate(name: 'docker', image: 'docker:18.02', ttyEnabled: true, command: 'cat'),
