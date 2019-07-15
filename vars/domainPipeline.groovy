@@ -29,7 +29,7 @@ def call(Map pipelineParams) {
                 try {
                     versionNumber = generateVersion(pom: 'pom.xml')
                     currentBuild.displayName = "# ${versionNumber}"
-                    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'github',
+                    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: "${pipelineParams.gitCredentialId}",
                                       usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
 
                         sh "git config credential.username ${env.GIT_USERNAME}"
