@@ -67,7 +67,7 @@ def call(Map pipelineParams) {
             }
             
             stage ('Trigger CI') {
-                   build job: 'micrometer-ci-pipeline', parameters: [string(name: 'VERSION', value: "${versionNumber}")]           
+                   build job: 'micrometer-ci-pipeline', parameters: [string(name: 'VERSION', value: "${versionNumber}")], wait: false           
             }
         }
     }
