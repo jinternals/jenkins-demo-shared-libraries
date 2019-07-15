@@ -65,6 +65,13 @@ def call(Map pipelineParams) {
                     }
                 }
             }
+            
+            stage ('Trigger CI') {
+                
+                    build job: 'ci-pipeline', parameters: [[$class: 'StringParameterValue', name: 'VERSION', value: "${versionNumber}"]]
+
+            
+            }
         }
     }
 
