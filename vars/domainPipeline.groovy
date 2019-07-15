@@ -1,6 +1,6 @@
 def call(Map pipelineParams) {
 
-    def label = "jenkins-slave-${UUID.randomUUID().toString()}"
+    def label = "jenkins-domain-build-${UUID.randomUUID().toString()}"
 
     podTemplate(
             label: label,
