@@ -23,7 +23,7 @@ def call(Map pipelineParams) {
                 }
             }
 
-            stage('Test job configuration') {
+            stage('Test jenkins jobs') {
                 container('jenkins-job-builder') {
                     try {
                         sh 'jenkins-jobs test -r ./configuration'
