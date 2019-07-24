@@ -33,7 +33,7 @@ def call(Map pipelineParams) {
                 }
             }
 
-            stage('Build and update jenkins jobs') {
+            stage('Update jenkins jobs') {
                 container('jenkins-job-builder') {
                     try {
                         sh 'jenkins-jobs update --delete-old -r ./configuration'
