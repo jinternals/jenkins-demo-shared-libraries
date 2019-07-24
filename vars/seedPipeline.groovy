@@ -10,8 +10,7 @@ def call(Map pipelineParams) {
                     containerTemplate(name: 'jenkins-job-builder', image: 'jinternals/jenkins-job-builder', ttyEnabled: true, command: 'cat')
             ],
             volumes: [
-                    hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock'),
-                    hostPathVolume(hostPath: '/root/.m2', mountPath: '/root/.m2')
+                    secretVolume(secretName: 'jenkins-job-builder', mountPath: '/etc/jenkins_jobs/')
             ]) {
 
         node(label) {
@@ -23,7 +22,23 @@ def call(Map pipelineParams) {
                     throw e;
                 }
             }
-
+            
+            stage('Test job configuration') {
+                try {
+                    sh 'jenkins-jobs test -r ./configuration'
+                } catch (e) {
+                    throw e;
+                }
+            }
+            
+            stage('Test job configuration') {
+                try {
+                    sh 'jenkins-jobs update --delete-old -r ./configuration'
+                } catch (e) {
+                    throw e;
+                }
+            }
+            
         }
     }
 
