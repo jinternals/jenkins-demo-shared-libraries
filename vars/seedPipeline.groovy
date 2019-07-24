@@ -17,28 +17,32 @@ def call(Map pipelineParams) {
 
             stage('Checkout') {
                 try {
-                    git branch:  "${pipelineParams.gitBranch}", credentialsId: "${pipelineParams.gitCredentialId}", url: "${pipelineParams.gitRepository}"
+                    git branch: "${pipelineParams.gitBranch}", credentialsId: "${pipelineParams.gitCredentialId}", url: "${pipelineParams.gitRepository}"
                 } catch (e) {
                     throw e;
                 }
             }
-            
+
             stage('Test job configuration') {
-                try {
-                    sh 'jenkins-jobs test -r ./configuration'
-                } catch (e) {
-                    throw e;
+                container('jenkins-job-builder') {
+                    try {
+                        sh 'jenkins-jobs test -r ./configuration'
+                    } catch (e) {
+                        throw e;
+                    }
                 }
             }
-            
+
             stage('Test job configuration') {
-                try {
-                    sh 'jenkins-jobs update --delete-old -r ./configuration'
-                } catch (e) {
-                    throw e;
+                container('jenkins-job-builder') {
+                    try {
+                        sh 'jenkins-jobs update --delete-old -r ./configuration'
+                    } catch (e) {
+                        throw e;
+                    }
                 }
             }
-            
+
         }
     }
 
