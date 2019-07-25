@@ -16,6 +16,8 @@ def call(Map pipelineParams) {
         node(label) {
 
             stage('Deploy') {
+                
+                echo env.CHANGE_ID
                checkout([$class: 'GitSCM', 
                          branches: [[name: '${sha1}']], 
                          doGenerateSubmoduleConfigurations: false, 
