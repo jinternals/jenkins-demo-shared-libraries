@@ -17,7 +17,7 @@ def call(Map pipelineParams) {
 
             stage('Deploy') {
                        checkout([$class: 'GitSCM', 
-                         branches: [[name: '${ghprbPullId}']], 
+                         branches: [[name: '${sha1}']], 
                          doGenerateSubmoduleConfigurations: false, 
                          extensions: [], 
                          submoduleCfg: [], 
