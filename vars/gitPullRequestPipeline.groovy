@@ -16,7 +16,19 @@ def call(Map pipelineParams) {
         node(label) {
 
             stage('Deploy') {
-                echo env.CHANGE_ID
+               checkout([$class: 'GitSCM', 
+                         branches: [[name: '${ghprbActualCommit}']], 
+                         doGenerateSubmoduleConfigurations: false, 
+                         extensions: [], 
+                         submoduleCfg: [], 
+                         userRemoteConfigs: [
+                             [
+                                 credentialsId: 'github',
+                                 refspec: '+refs/pull/${ghprbPullId}/*:refs/remotes/origin/pr/${ghprbPullId}/*', 
+                                 url: 'https://github.com/jinternals/spring-micrometer-demo.git'
+                             ]
+                         ]
+                        ])
             }
 
         }
