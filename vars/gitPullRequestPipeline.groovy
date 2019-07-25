@@ -16,7 +16,7 @@ def call(Map pipelineParams) {
         node(label) {
 
             stage('Deploy') {
-                echo env
+                echo env.CHANGE_ID
             }
 
         }
