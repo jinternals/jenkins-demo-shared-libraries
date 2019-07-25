@@ -24,6 +24,7 @@ def call(Map pipelineParams) {
                          userRemoteConfigs: [
                              [
                                  credentialsId: 'github',
+                                 name: 'origin',
                                  refspec: '+refs/pull/*:refs/remotes/origin/pr/*', 
                                  url: 'https://github.com/jinternals/spring-micrometer-demo.git'
                              ]
