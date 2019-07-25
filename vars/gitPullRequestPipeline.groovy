@@ -17,7 +17,7 @@ def call(Map pipelineParams) {
 
             stage('Deploy') {
                 
-                echo "${sha1}
+                echo "${sha1}"
                checkout([$class: 'GitSCM', 
                          branches: [[name: '${sha1}']], 
                          doGenerateSubmoduleConfigurations: false, 
