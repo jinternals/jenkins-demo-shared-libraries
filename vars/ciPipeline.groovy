@@ -27,9 +27,11 @@ def call(Map pipelineParams) {
     
             stage('Determine config version') {
                 try {
-                    versionNumber = getCurrentTag()
-                    currentBuild.displayName = "# Config Version : ${versionNumber}"
-                  
+                    configVersion = getCurrentTag()
+                    currentBuild.displayName = "# ${versionNumber} / ${configVersion}"
+                    container('kubectl') {
+                       sh "kubectl create configmap ${pipelineParams.name}-${configVersion} --from-env-file=${pipelineParams.name}/application.properties  --dry-run -o yaml | kubectl apply -f -"
+                    }
                 } catch (e) {
                     throw e;
                 }
