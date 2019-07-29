@@ -30,7 +30,7 @@ def call(Map pipelineParams) {
                     configVersion = getCurrentTag()
                     currentBuild.displayName = "# ${configVersion} / ${VERSION}"
                     container('kubectl') {
-                       sh "kubectl create configmap ${pipelineParams.name}-${configVersion} --from-env-file=${pipelineParams.name}/application.properties  --dry-run -o yaml | kubectl apply -f -"
+                       sh "kubectl create configmap ${pipelineParams.name}-config-${configVersion} --from-env-file=${pipelineParams.name}/application.properties  --dry-run -o yaml | kubectl apply -f -"
                     }
                 } catch (e) {
                     throw e;
