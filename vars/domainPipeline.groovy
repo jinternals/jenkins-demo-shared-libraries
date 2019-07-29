@@ -66,7 +66,7 @@ def call(Map pipelineParams) {
                 }
             }
             
-            stage ('Trigger CI') {
+            stage ('Trigger Ci Deployment') {
                 build job: "${pipelineParams.name}-ci-pipeline", parameters: [string(name: 'VERSION', value: "${versionNumber}")], wait: false           
             }
         }
