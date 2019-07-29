@@ -23,12 +23,16 @@ def call(Map pipelineParams) {
                     throw e;
                 }
             }
-
-            stage('Configure Environment') {
-              container('kubectl') {
-                  configVersion = getCurrentTag()
-                  sh "kubectl create configmap ${pipelineParams.name}-${configVersion} --from-env-file=${pipelineParams.name}/application.properties  --dry-run -o yaml | kubectl apply -f -"
-              }
+            
+    
+            stage('Determine config version') {
+                try {
+                    versionNumber = getCurrentTag()
+                    currentBuild.displayName = "# Config Version : ${versionNumber}"
+                  
+                } catch (e) {
+                    throw e;
+                }
             }
             
             stage('Deploy') {
