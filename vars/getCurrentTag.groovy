@@ -1,4 +1,4 @@
-def call(Map opts = [:]) {
+def call() {
 
   sh "git tag --sort version:refname | tail -1 > version.tmp"
 
