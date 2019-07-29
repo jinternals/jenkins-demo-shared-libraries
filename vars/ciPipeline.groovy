@@ -7,7 +7,8 @@ def call(Map pipelineParams) {
             cloud: 'jenkins',
             containers: [
                     containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:latest', args: '${computer.jnlpmac} ${computer.name}'),
-                    containerTemplate(name: 'docker', image: 'docker:18.02', ttyEnabled: true, command: 'cat')
+                    containerTemplate(name: 'docker', image: 'docker:18.02', ttyEnabled: true, command: 'cat'),
+                    containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true)
             ],
             volumes: [
                     hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock'),
@@ -24,7 +25,9 @@ def call(Map pipelineParams) {
             }
 
             stage('Configure Environment') {
-                       sh "echo Configuring Environment"
+              container('kubectl') {
+                sh "kubectl get pods"
+              }
             }
             
             stage('Deploy') {
