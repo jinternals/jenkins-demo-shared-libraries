@@ -14,6 +14,14 @@ def call(Map pipelineParams) {
             ]) {
 
         node(label) {
+            
+           stage('Checkout Configuration') {
+                try {
+                    git branch:  "${pipelineParams.configBranch}", credentialsId: "${pipelineParams.configCredentialId}", url: "${pipelineParams.configRepository}"
+                } catch (e) {
+                    throw e;
+                }
+            }
 
             stage('Configure Environment') {
                        sh "echo Configuring Environment"
