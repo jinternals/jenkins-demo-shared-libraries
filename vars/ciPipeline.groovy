@@ -40,7 +40,7 @@ def call(Map pipelineParams) {
             stage('Deploy') {
                 try {
                     def options = ["configVersion":"${configVersion}", "applicationVersion":"${VERSION}"]
-                    template("${pipelineParams.name}/kubernetes/deployment.yaml",options)
+                    template("./${pipelineParams.name}/kubernetes/deployment.yaml",options)
                 } catch (e) {
                     throw e;
                 }
