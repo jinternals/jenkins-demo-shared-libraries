@@ -76,7 +76,7 @@ def call(Map pipelineParams) {
                         if(confgiMaps.size > 5)
                         {
                            confgiMaps.dropRight(5).each{ 
-                               confgiMap -> sh "kubectl delete ${confgiMap} --namespace=${pipelineParams.environment}"
+                               confgiMap -> sh "kubectl delete configMaps ${confgiMap} --namespace=${pipelineParams.environment}"
                            }
                         }
                         
