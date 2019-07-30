@@ -2,6 +2,10 @@ def call(String inputFile , Map options = [:], String outputFile) {
   def templateContent = readFile inputFile
   def engine = new groovy.text.SimpleTemplateEngine()
   def result = engine.createTemplate(templateContent).make(options)
-  writeFile file: outputFile, text: result.toString()
+  def templateOutput = result.toString()
+ 
+  engine = null
+  result = null
+  writeFile file: outputFile, text: templateOutput
   sh "ls"
 }
