@@ -54,7 +54,6 @@ def call(Map pipelineParams) {
                         
                         def deploymentYaml = substituteTemplate("${pipelineParams.name}/${pipelineParams.environment}/kubernetes/deployment.yaml",options)
                     
-                        sh "echo ${deploymentYaml}"
                     }
                 } catch (e) {
                     throw e;
