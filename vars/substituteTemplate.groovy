@@ -4,4 +4,5 @@ def call(String inputFile , Map options = [:], String outputFile) {
   def engine = new groovy.text.SimpleTemplateEngine()
   def result = engine.createTemplate(templateContent).make(options)
   writeFile file: outputFile, text: result.toString()
+  sh "ls"
 }
