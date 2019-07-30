@@ -29,7 +29,9 @@ def call(Map pipelineParams) {
                 try {
                     configVersion = getCurrentTag()
                     currentBuild.displayName = "# ${configVersion} / ${VERSION}"
+                    sh "pwd"
                     container('kubectl') {
+                        sh "pwd"
                        sh "kubectl create configmap ${pipelineParams.name}-config-${configVersion} --from-env-file=${pipelineParams.name}/configuration/application.properties  --dry-run -o yaml | kubectl apply -f -"
                        def options = ["configVersion":"${configVersion}", "applicationVersion":"${VERSION}"]
                        template("./${pipelineParams.name}/kubernetes/deployment.yaml",options)
