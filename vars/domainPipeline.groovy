@@ -27,7 +27,7 @@ def call(Map pipelineParams) {
 
             stage('Determine Version') {
                 try {
-                    def versionNumber = generateVersion(pom: 'pom.xml')
+                    versionNumber = generateVersion(pom: 'pom.xml')
                     currentBuild.displayName = "# ${versionNumber}"
                     createGitTag(pipelineParams,versionNumber)
                 } catch (e) {
