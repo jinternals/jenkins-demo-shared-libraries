@@ -57,8 +57,7 @@ def call(Map pipelineParams) {
                        substituteTemplate(inputFile, options, outputFile)
                         
                        sh "kubectl apply -f ${outputFile} --namespace=${pipelineParams.environment}"
- 
-                                            
+    
                     }
                 } catch (e) {
                     throw e;
@@ -66,7 +65,25 @@ def call(Map pipelineParams) {
             }
             
             stage('Verify Deployment') {
-                       sh "echo Verfiy Deployment"
+                 try {
+                    container('kubectl') {
+                       sh "kubectl get configMaps --namespace=${pipelineParams.environment} --sort-by=.metadata.creationTimestamp -o=custom-columns=:.metadata.name > configMaps"                      
+                       def input = readFile "configMaps"
+                        
+                       def confgiMaps = new String( value ).split( '\n' )
+                        if(confgiMaps.length > 5)
+                        {
+                          confgiMaps.dropRight(5).each{ 
+                              confgiMap ->  sh "kubectl delete ${confgiMap} --namespace=${pipelineParams.environment}"
+                          }
+                        }
+
+ 
+
+                    }
+                } catch (e) {
+                    throw e;
+                }
             }
 
             stage('Promote to Staging') {
