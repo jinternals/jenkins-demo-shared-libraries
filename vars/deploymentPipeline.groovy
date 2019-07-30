@@ -55,6 +55,9 @@ def call(Map pipelineParams) {
                        def outputFile = "${pipelineParams.environment}-deployment.yaml"
 
                        substituteTemplate(inputFile, options, outputFile)
+                        
+                       sh "kubectl apply -f ${outputFile} --namespace=${pipelineParams.environment}"
+ 
                                             
                     }
                 } catch (e) {
