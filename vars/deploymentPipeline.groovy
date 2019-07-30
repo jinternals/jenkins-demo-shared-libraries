@@ -29,7 +29,7 @@ def call(Map pipelineParams) {
                 try {
                     configVersion = getCurrentTag()
                     currentBuild.displayName = "# ${configVersion} / ${VERSION}"
-                    sh "cat ${pipelineParams.name}/kubernetes/deployment.yaml"
+
                     container('kubectl') {
                        def configFile = "${pipelineParams.name}/${pipelineParams.environment}/configuration/application.properties"
                        def configMapName= "${pipelineParams.name}-config-${configVersion}"
