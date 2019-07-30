@@ -51,8 +51,8 @@ def call(Map pipelineParams) {
                            "applicationVersion":"${VERSION}", 
                            "environment": "${pipelineParams.environment}"
                        ]
-                       def inputFile "${pipelineParams.name}/${pipelineParams.environment}/kubernetes/deployment.yaml"
-                       def outputFile "${pipelineParams.environment}-deployment.yaml"
+                       def inputFile = "${pipelineParams.name}/${pipelineParams.environment}/kubernetes/deployment.yaml"
+                       def outputFile = "${pipelineParams.environment}-deployment.yaml"
 
                        def deploymentYaml = substituteTemplate(inputFile, options, outputFile)
                         
