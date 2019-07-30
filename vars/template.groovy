@@ -1,7 +1,7 @@
 
 def call(String fileName,Map options = [:]) {
-  String fileContents = new File(fileName).text
+  der template = readFile fileName
   def engine = new groovy.text.SimpleTemplateEngine()
-  def template = engine.createTemplate(text).make(options)
-  println template.toString()
+  def result = engine.createTemplate(template).make(options)
+  println result.toString()
 }
