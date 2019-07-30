@@ -31,13 +31,13 @@ def call(Map pipelineParams) {
                     currentBuild.displayName = "# ${configVersion} / ${VERSION}"
                     sh "cat ${pipelineParams.name}/kubernetes/deployment.yaml"
                     container('kubectl') {
-                       def configFile = ${pipelineParams.name}/${pipelineParams.environment}/configuration/application.properties
-                       def configMapName= ${pipelineParams.name}-config-${configVersion}
+                       def configFile = "${pipelineParams.name}/${pipelineParams.environment}/configuration/application.properties"
+                       def configMapName= "${pipelineParams.name}-config-${configVersion}"
                        
                        sh "kubectl create configmap ${configMapName} --from-env-file=${configFile} --namespace=${pipelineParams.environment}  --dry-run -o yaml | kubectl apply -f -"
                        
                        def options = ["configVersion":"${configVersion}", "applicationVersion":"${VERSION}"]
-                       template("${pipelineParams.name}/kubernetes/deployment.yaml",options)
+                       template("${pipelineParams.name}/${pipelineParams.environment}/kubernetes/deployment.yaml",options)
                     }
                 } catch (e) {
                     throw e;
