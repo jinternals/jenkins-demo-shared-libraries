@@ -47,8 +47,8 @@ def call(Map pipelineParams) {
                     container('kubectl') {
                       
                        def options = [
-                           "configVersion":" ${configVersion}", 
-                           "appVersion":"${VERSION}", 
+                           "configVersion": "${configVersion}", 
+                           "appVersion": "${VERSION}", 
                            "environment": "${pipelineParams.environment}"
                        ]
                        def inputFile = "${pipelineParams.name}/${pipelineParams.environment}/kubernetes/deployment.yaml"
