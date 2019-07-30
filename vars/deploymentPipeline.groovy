@@ -55,6 +55,8 @@ def call(Map pipelineParams) {
                        def outputFile "${pipelineParams.environment}-deployment.yaml"
 
                        def deploymentYaml = substituteTemplate(inputFile, options, outputFile)
+                        
+                       sh "cat ${outputFile}"
                     
                     }
                 } catch (e) {
