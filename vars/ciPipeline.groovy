@@ -31,6 +31,8 @@ def call(Map pipelineParams) {
                     currentBuild.displayName = "# ${configVersion} / ${VERSION}"
                     container('kubectl') {
                        sh "kubectl create configmap ${pipelineParams.name}-config-${configVersion} --from-env-file=${pipelineParams.name}/configuration/application.properties  --dry-run -o yaml | kubectl apply -f -"
+                       def options = ["configVersion":"${configVersion}", "applicationVersion":"${VERSION}"]
+                       template("./${pipelineParams.name}/kubernetes/deployment.yaml",options)
                     }
                 } catch (e) {
                     throw e;
@@ -39,11 +41,7 @@ def call(Map pipelineParams) {
             
             stage('Deploy') {
                 try {
-                   container('kubectl') {
-                    sh "pwd"
-                    def options = ["configVersion":"${configVersion}", "applicationVersion":"${VERSION}"]
-                    template("./${pipelineParams.name}/kubernetes/deployment.yaml",options)
-                   }   
+                  echo "Deploy" 
                 } catch (e) {
                     throw e;
                 }
