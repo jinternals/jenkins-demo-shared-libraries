@@ -1,6 +1,6 @@
 def call(Map pipelineParams) {
 
-    def label = "ci-deployment-${UUID.randomUUID().toString()}"
+    def label = "${pipelineParams.environment}-deployment-${UUID.randomUUID().toString()}"
 
     podTemplate(
             label: label,
