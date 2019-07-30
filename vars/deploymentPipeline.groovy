@@ -68,9 +68,9 @@ def call(Map pipelineParams) {
                  try {
                     container('kubectl') {
                        sh "kubectl get configMaps --namespace=${pipelineParams.environment} --sort-by=.metadata.creationTimestamp -o=custom-columns=:.metadata.name > configMaps"                      
-                       def input = readFile "configMaps"
+                       def confgiMapsContent = readFile "configMaps"
                         
-                       def confgiMaps = new String( value ).split( '\n' )
+                       def confgiMaps = new String( confgiMapsContent ).split( '\n' )
                         if(confgiMaps.length > 5)
                         {
                           confgiMaps.dropRight(5).each{ 
