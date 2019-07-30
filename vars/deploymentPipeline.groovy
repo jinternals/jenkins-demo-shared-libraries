@@ -37,7 +37,7 @@ def call(Map pipelineParams) {
                        sh "kubectl create configmap ${configMapName} --from-env-file=${configFile} --namespace=${pipelineParams.environment}  --dry-run -o yaml | kubectl apply -f -"
                        
                        def options = ["configVersion":"${configVersion}", "applicationVersion":"${VERSION}"]
-                       template("${pipelineParams.name}/${pipelineParams.environment}/kubernetes/deployment.yaml",options)
+                       substituteTemplate("${pipelineParams.name}/${pipelineParams.environment}/kubernetes/deployment.yaml",options)
                     }
                 } catch (e) {
                     throw e;
@@ -46,7 +46,18 @@ def call(Map pipelineParams) {
             
             stage('Deploy') {
                 try {
-                  echo "Deploy" 
+                    container('kubectl') {
+                      
+                       def options = [
+                           "configVersion":" ${configVersion}", 
+                           "applicationVersion":"${VERSION}", 
+                           "environment": "${pipelineParams.environment}"
+                       ]
+                        
+                        def deploymentYaml = substituteTemplate("${pipelineParams.name}/${pipelineParams.environment}/kubernetes/deployment.yaml",options)
+                    
+                        sh "echo ${deploymentYaml}"
+                    }
                 } catch (e) {
                     throw e;
                 }
