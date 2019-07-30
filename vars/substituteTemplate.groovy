@@ -1,4 +1,3 @@
-@NonCPS
 def call(String inputFile , Map options = [:], String outputFile) {
   def templateContent = readFile inputFile
   def engine = new groovy.text.SimpleTemplateEngine()
