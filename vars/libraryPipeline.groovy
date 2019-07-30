@@ -42,7 +42,7 @@ def call(Map pipelineParams) {
 
 
             stage('Publish Artifacts') {
-                sh "Publish Artifacts"
+                sh "echo Publish Artifacts"
             }
         }
     }
