@@ -67,19 +67,19 @@ def call(Map pipelineParams) {
             stage('Verify Deployment') {
                  try {
                     container('kubectl') {
-                       sh "kubectl get configMaps --namespace=${pipelineParams.environment} --sort-by=.metadata.creationTimestamp -o=custom-columns=:.metadata.name > configMaps"                      
-                       def confgiMapsContent = readFile "configMaps"
+                       
+                        sh "kubectl get configMaps --namespace=${pipelineParams.environment} --sort-by=.metadata.creationTimestamp -o=custom-columns=:.metadata.name > configMaps"                      
+                        def confgiMapsString = readFile "configMaps"
                         
-                       def confgiMaps = new String( confgiMapsContent ).split( '\n' )
-                        if(confgiMaps.length > 5)
+                        def confgiMaps = new String( confgiMapsString ).split( '\n' ).findAll { it.startsWith('micrometer-config') }
+
+                        if(confgiMaps.size > 5)
                         {
-                          confgiMaps.dropRight(5).each{ 
-                              confgiMap ->  sh "kubectl delete ${confgiMap} --namespace=${pipelineParams.environment}"
-                          }
+                           confgiMaps.dropRight(5).each{ 
+                               confgiMap -> sh "kubectl delete ${confgiMap} --namespace=${pipelineParams.environment}"
+                           }
                         }
-
- 
-
+                        
                     }
                 } catch (e) {
                     throw e;
