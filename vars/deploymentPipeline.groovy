@@ -48,7 +48,7 @@ def call(Map pipelineParams) {
                       
                        def options = [
                            "configVersion":" ${configVersion}", 
-                           "applicationVersion":"${VERSION}", 
+                           "appVersion":"${VERSION}", 
                            "environment": "${pipelineParams.environment}"
                        ]
                        def inputFile = "${pipelineParams.name}/${pipelineParams.environment}/kubernetes/deployment.yaml"
