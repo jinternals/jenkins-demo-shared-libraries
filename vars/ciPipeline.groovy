@@ -39,9 +39,11 @@ def call(Map pipelineParams) {
             
             stage('Deploy') {
                 try {
+                   container('kubectl') {
                     sh "pwd"
                     def options = ["configVersion":"${configVersion}", "applicationVersion":"${VERSION}"]
                     template("./${pipelineParams.name}/kubernetes/deployment.yaml",options)
+                   }   
                 } catch (e) {
                     throw e;
                 }
