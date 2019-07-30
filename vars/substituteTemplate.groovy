@@ -2,7 +2,6 @@ def call(String inputFile , Map options = [:], String outputFile) {
   transform(inputFile, options, outputFile)
 }
 
-@NonCPS
 def transform(String inputFile , Map options = [:], String outputFile) {
   def templateContent = readFile inputFile
   def engine = new groovy.text.SimpleTemplateEngine()
