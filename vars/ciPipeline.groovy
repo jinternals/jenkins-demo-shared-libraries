@@ -31,7 +31,11 @@ def call(Map pipelineParams) {
                     currentBuild.displayName = "# ${configVersion} / ${VERSION}"
                     sh "cat ${pipelineParams.name}/kubernetes/deployment.yaml"
                     container('kubectl') {
-                       sh "kubectl create configmap ${pipelineParams.name}-config-${configVersion} --from-env-file=${pipelineParams.name}/configuration/application.properties  --dry-run -o yaml | kubectl apply -f -"
+                       def configFile = ${pipelineParams.name}/${pipelineParams.environment}/configuration/application.properties
+                       def configMapName= ${pipelineParams.name}-config-${configVersion}
+                       
+                       sh "kubectl create configmap ${configMapName} --from-env-file=${configFile} --namespace=${pipelineParams.environment}  --dry-run -o yaml | kubectl apply -f -"
+                       
                        def options = ["configVersion":"${configVersion}", "applicationVersion":"${VERSION}"]
                        template("${pipelineParams.name}/kubernetes/deployment.yaml",options)
                     }
