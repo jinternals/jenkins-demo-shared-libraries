@@ -33,7 +33,7 @@ def call(Map pipelineParams) {
                     container('kubectl') {
                        sh "kubectl create configmap ${pipelineParams.name}-config-${configVersion} --from-env-file=${pipelineParams.name}/configuration/application.properties  --dry-run -o yaml | kubectl apply -f -"
                        def options = ["configVersion":"${configVersion}", "applicationVersion":"${VERSION}"]
-                       template("./${pipelineParams.name}/kubernetes/deployment.yaml",options)
+                       template("${pipelineParams.name}/kubernetes/deployment.yaml",options)
                     }
                 } catch (e) {
                     throw e;
