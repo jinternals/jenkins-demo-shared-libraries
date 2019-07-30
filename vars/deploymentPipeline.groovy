@@ -36,8 +36,6 @@ def call(Map pipelineParams) {
                        
                        sh "kubectl create configmap ${configMapName} --from-env-file=${configFile} --namespace=${pipelineParams.environment}  --dry-run -o yaml | kubectl apply -f -"
                        
-                       def options = ["configVersion":"${configVersion}", "applicationVersion":"${VERSION}"]
-                       substituteTemplate("${pipelineParams.name}/${pipelineParams.environment}/kubernetes/deployment.yaml",options)
                     }
                 } catch (e) {
                     throw e;
