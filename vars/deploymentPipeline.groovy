@@ -62,7 +62,7 @@ def call(Map pipelineParams) {
                        def serviceInputFile = "${pipelineParams.name}/${pipelineParams.environment}/kubernetes/service.yaml"
                        def serviceOutputFile = "${pipelineParams.environment}-service.yaml"
                       
-                       substituteTemplate(serviceInputFile, options, serviceOutputFile)
+                       substituteTemplate(serviceInputFile, templateParameters, serviceOutputFile)
                        
                        sh "kubectl apply -f ${serviceOutputFile} --namespace=${pipelineParams.environment}"
                     }
