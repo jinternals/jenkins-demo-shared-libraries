@@ -27,6 +27,8 @@ def call(Map pipelineParams) {
                                                    credentialsId:  "${pipelineParams.gitCredentialId}",
                                                    url: "${pipelineParams.gitRepository}"]]
                     ])
+                   
+                    sh "git diff --dirstat=files,0 HEAD~1"
                                                   
                 } catch (e) {
                     throw e;
