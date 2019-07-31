@@ -28,7 +28,7 @@ def call(Map pipelineParams) {
             stage('Deploy Configuration') {
                 try {
                     configVersion = getCurrentTag()
-                    currentBuild.displayName = "# ${configVersion} / ${VERSION}"
+                    currentBuild.displayName = "# ${configVersion} / ${APP_VERSION}"
 
                     container('kubectl') {
                        def configFile = "${pipelineParams.name}/${pipelineParams.environment}/configuration/application.properties"
@@ -48,7 +48,7 @@ def call(Map pipelineParams) {
                       
                        def templateParameters = [
                            "configVersion": "${configVersion}", 
-                           "appVersion": "${VERSION}", 
+                           "appVersion": "${APP_VERSION}", 
                            "environment": "${pipelineParams.environment}"
                        ]
                        def deploymentInputFile = "${pipelineParams.name}/${pipelineParams.environment}/kubernetes/deployment.yaml"
