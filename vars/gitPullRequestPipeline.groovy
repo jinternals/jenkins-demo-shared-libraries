@@ -15,7 +15,7 @@ def call(Map pipelineParams) {
 
         node(label) {
             
-            stage('Checkout Configuration') {
+            stage('Checkout Pull Request') {
                 try {
                     currentBuild.displayName = "# PR ${ghprbPullId}"
 
