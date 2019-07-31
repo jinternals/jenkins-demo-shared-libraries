@@ -25,7 +25,7 @@ def call(Map pipelineParams) {
             }
             
     
-            stage('Determine config version') {
+            stage('Deploy Configuration') {
                 try {
                     configVersion = getCurrentTag()
                     currentBuild.displayName = "# ${configVersion} / ${VERSION}"
@@ -42,7 +42,7 @@ def call(Map pipelineParams) {
                 }
             }
             
-            stage('Deploy') {
+            stage('Deploy Application') {
                 try {
                     container('kubectl') {
                       
@@ -64,7 +64,7 @@ def call(Map pipelineParams) {
                 }
             }
             
-            stage('Verify Deployment') {
+            stage('Cleanup') {
                  try {
                     container('kubectl') {
                        
@@ -86,9 +86,6 @@ def call(Map pipelineParams) {
                 }
             }
 
-            stage('Promote to Staging') {
-                       sh "echo Promoting to Staging"
-            }
         }
     }
 
