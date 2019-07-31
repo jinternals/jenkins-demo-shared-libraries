@@ -8,4 +8,5 @@ def _transform(String inputFile , Map binding = [:], String outputFile) {
   def templateOutput = engine.replace(input)
   engine = null
   writeFile file: outputFile, text: templateOutput
+  sh "cat ${outputFile}"
 }
