@@ -24,8 +24,10 @@ def call(Map pipelineParams) {
                               doGenerateSubmoduleConfigurations: false,
                               extensions: [[$class: 'LocalBranch'], [$class: 'RelativeTargetDirectory', relativeTargetDir: "jinternals"]],
                               userRemoteConfigs: [[refspec: "+refs/pull/${ghprbPullId}/head:refs/remotes/origin/PR-${ghprbPullId} +refs/heads/master:refs/remotes/origin/master",
-                                                   url: "https://github.com/jinternals/spring-micrometer-demo.git"]]
+                                                   credentialsId:  "${pipelineParams.gitCredentialId}",
+                                                   url: "${pipelineParams.gitRepository}]]
                     ])
+                                                  
                 } catch (e) {
                     throw e;
                 }
