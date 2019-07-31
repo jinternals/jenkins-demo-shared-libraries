@@ -25,7 +25,7 @@ def call(Map pipelineParams) {
                               extensions: [[$class: 'LocalBranch'], [$class: 'RelativeTargetDirectory', relativeTargetDir: "jinternals"]],
                               userRemoteConfigs: [[refspec: "+refs/pull/${ghprbPullId}/head:refs/remotes/origin/PR-${ghprbPullId} +refs/heads/master:refs/remotes/origin/master",
                                                    credentialsId:  "${pipelineParams.gitCredentialId}",
-                                                   url: "${pipelineParams.gitRepository}]]
+                                                   url: "${pipelineParams.gitRepository}"]]
                     ])
                                                   
                 } catch (e) {
