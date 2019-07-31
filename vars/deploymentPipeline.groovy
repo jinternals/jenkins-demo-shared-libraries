@@ -46,18 +46,25 @@ def call(Map pipelineParams) {
                 try {
                     container('kubectl') {
                       
-                       def options = [
+                       def templateParameters = [
                            "configVersion": "${configVersion}", 
                            "appVersion": "${VERSION}", 
                            "environment": "${pipelineParams.environment}"
                        ]
-                       def inputFile = "${pipelineParams.name}/${pipelineParams.environment}/kubernetes/deployment.yaml"
-                       def outputFile = "${pipelineParams.environment}-deployment.yaml"
+                       def deploymentInputFile = "${pipelineParams.name}/${pipelineParams.environment}/kubernetes/deployment.yaml"
+                       def deploymentOutputFile = "${pipelineParams.environment}-deployment.yaml"
 
-                       substituteTemplate(inputFile, options, outputFile)
+                       substituteTemplate(deploymentInputFile, templateParameters, deploymentOutputFile)
+                       
+                       sh "kubectl apply -f ${deploymentOutputFile} --namespace=${pipelineParams.environment}"
+
                         
-                       sh "kubectl apply -f ${outputFile} --namespace=${pipelineParams.environment}"
-    
+                       def serviceInputFile = "${pipelineParams.name}/${pipelineParams.environment}/kubernetes/service.yaml"
+                       def serviceOutputFile = "${pipelineParams.environment}-service.yaml"
+                      
+                       substituteTemplate(serviceInputFile, options, serviceOutputFile)
+                       
+                       sh "kubectl apply -f ${serviceOutputFile} --namespace=${pipelineParams.environment}"
                     }
                 } catch (e) {
                     throw e;
