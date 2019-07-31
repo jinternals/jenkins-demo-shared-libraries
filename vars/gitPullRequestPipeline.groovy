@@ -14,9 +14,21 @@ def call(Map pipelineParams) {
             ]) {
 
         node(label) {
+            
+            stage('Checkout Configuration') {
+                try {
+                    currentBuild.displayName = "# PR ${ghprbPullId}"
 
-            stage('Deploy') {
-                       sh "echo $action"
+                    checkout([$class: 'GitSCM',
+                              branches: [[name: "FETCH_HEAD"]],
+                              doGenerateSubmoduleConfigurations: false,
+                              extensions: [[$class: 'LocalBranch'], [$class: 'RelativeTargetDirectory', relativeTargetDir: "jinternals"]],
+                              userRemoteConfigs: [[refspec: "+refs/pull/${ghprbPullId}/head:refs/remotes/origin/PR-${ghprbPullId} +refs/heads/master:refs/remotes/origin/master",
+                                                   url: "https://github.com/jinternals/spring-micrometer-demo.git"]]
+                    ])
+                } catch (e) {
+                    throw e;
+                }
             }
 
         }
