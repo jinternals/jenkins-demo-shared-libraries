@@ -23,16 +23,7 @@ def call(Map pipelineParams) {
                 try {
                     currentBuild.displayName = "# PR ${ghprbPullId}"
 
-                   /* checkout([$class: 'GitSCM',
-                              branches: [[name: "FETCH_HEAD"]],
-                              doGenerateSubmoduleConfigurations: false,
-                              extensions: [[$class: 'LocalBranch'], [$class: 'RelativeTargetDirectory', relativeTargetDir: "jinternals"]],
-                              userRemoteConfigs: [[refspec: "+refs/pull/${ghprbPullId}/head:refs/remotes/origin/PR-${ghprbPullId} +refs/heads/master:refs/remotes/origin/master",
-                                                   credentialsId:  "${pipelineParams.gitCredentialId}",
-                                                   url: "${pipelineParams.gitRepository}"]]
-                    ])*/
-                    
-                     checkout([
+                    checkout([
                               $class: 'GitSCM',
                               branches: [[name: "${sha1}"]],
                               doGenerateSubmoduleConfigurations: false,
@@ -40,15 +31,8 @@ def call(Map pipelineParams) {
                               userRemoteConfigs: [[refspec: "+refs/pull/*:refs/remotes/origin/pr/*",
                                                    credentialsId:  "${pipelineParams.gitCredentialId}",
                                                    url: "${pipelineParams.gitRepository}"]]
-                       ])
-
-                   /* 
-                     container('git'){
-                        sh "pwd"
-                        sh "git status"
-                        sh "git diff --name-only ${ghprbSourceBranch} ${ghprbTargetBranch}"
-                     }*/
-                              
+                     ])
+                    
                 } catch (e) {
                     throw e;
                 }
@@ -60,8 +44,8 @@ def call(Map pipelineParams) {
                           withSonarQubeEnv('sonar') { 
                               sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar " + 
                               "-f pom.xml " +
-                              "-Dsonar.organization=demo-ci-cd " +
-                              "-Dsonar.projectKey=com.jinternals:spring-micrometer-demo" +
+                              "-Dsonar.organization=${pipelineParams.sonar_organization} " +
+                              "-Dsonar.projectKey=${pipelineParams.sonar_projectKey} " +
                               "-Dsonar.login=$TOKEN"
                          }
                       }
@@ -77,11 +61,6 @@ def call(Map pipelineParams) {
               }
            }
 
-            /*stage('Build Artifacts') {
-                container('maven') {
-                    sh "mvn clean install"
-                }
-            }*/
 
         }
     }
