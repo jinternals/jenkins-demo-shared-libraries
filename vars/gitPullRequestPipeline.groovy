@@ -44,6 +44,8 @@ def call(Map pipelineParams) {
 
                     
                      container('git'){
+                        sh "pwd"
+                        sh "git status"
                         sh "git diff --name-only"
                      }
                               
