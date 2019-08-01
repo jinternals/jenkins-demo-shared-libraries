@@ -8,7 +8,9 @@ def call(Map pipelineParams) {
             containers: [
                     containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:latest', args: '${computer.jnlpmac} ${computer.name}'),
                     containerTemplate(name: 'docker', image: 'docker:18.02', ttyEnabled: true, command: 'cat'),
-                    containerTemplate(name: 'maven', image: 'maven:3.5-jdk-8', ttyEnabled: true, command: 'cat')
+                    containerTemplate(name: 'maven', image: 'maven:3.5-jdk-8', ttyEnabled: true, command: 'cat'),
+                    containerTemplate(name: 'git', image: 'alpine/git', ttyEnabled: true, command: 'cat')
+
             ],
             volumes: [
                     hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock'),
@@ -41,8 +43,9 @@ def call(Map pipelineParams) {
                        ])
 
                     
- 
-                  git diff --name-only
+                     container('git'){
+                        sh "git diff --name-only"
+                     }
                               
                 } catch (e) {
                     throw e;
