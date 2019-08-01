@@ -14,52 +14,75 @@ def call(Map pipelineParams) {
             ],
             volumes: [
                     hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock'),
-                    hostPathVolume(hostPath: '/root/.m2', mountPath: '/root/.m2')
+                    hostPathVolume(hostPath: '/root/.m2', mountPath: '/root/.m2'),
+                    hostPathVolume(hostPath: '/root/.sonar/cache', mountPath: '/root/.sonar/cache'),
+
+               
             ]) {
 
         node(label) {
-            
+
             stage('Checkout Pull Request') {
                 try {
                     currentBuild.displayName = "# PR ${ghprbPullId}"
 
                     checkout([
-                              $class: 'GitSCM',
-                              branches: [[name: "${sha1}"]],
-                              doGenerateSubmoduleConfigurations: false,
-                              extensions: [[$class: 'CloneOption', noTags: false, shallow: false, depth: 0, reference: '']],
-                              userRemoteConfigs: [[refspec: "+refs/pull/*:refs/remotes/origin/pr/*",
-                                                   credentialsId:  "${pipelineParams.gitCredentialId}",
-                                                   url: "${pipelineParams.gitRepository}"]]
-                     ])
-                    
+                            $class                           : 'GitSCM',
+                            branches                         : [[name: "${sha1}"]],
+                            doGenerateSubmoduleConfigurations: false,
+                            extensions                       : [[$class: 'CloneOption', noTags: false, shallow: false, depth: 0, reference: '']],
+                            userRemoteConfigs                : [[refspec      : "+refs/pull/*:refs/remotes/origin/pr/*",
+                                                                 credentialsId: "${pipelineParams.gitCredentialId}",
+                                                                 url          : "${pipelineParams.gitRepository}"]]
+                    ])
+
                 } catch (e) {
                     throw e;
                 }
             }
-            
-            stage("build & SonarQube analysis") {
-                container('maven') {
-                      withCredentials([string(credentialsId: 'sonar', variable: 'TOKEN')]) {
-                          withSonarQubeEnv('sonar') { 
-                              sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar " + 
-                              "-f pom.xml " +
-                              "-Dsonar.organization=${pipelineParams.sonarOrganization} " +
-                              "-Dsonar.projectKey=${pipelineParams.sonarProjectKey} " +
-                              "-Dsonar.login=$TOKEN"
-                         }
-                      }
+
+            stage('Build Source Code') {
+                try {
+                    container('maven') {
+                        sh "mvn clean compile"
+                    }
+                } catch (e) {
+                    throw e;
                 }
             }
 
-           stage("Quality Gate"){
-              timeout(time: 1, unit: 'HOURS') {
-                  def qg = waitForQualityGate()
-                  if (qg.status != 'OK') {
-                      error "Pipeline aborted due to quality gate failure: ${qg.status}"
-                  }
-              }
-           }
+            stage('Build Source Code') {
+                try {
+                    container('maven') {
+                        sh "mvn clean install"
+                    }
+                } catch (e) {
+                    throw e;
+                }
+            }
+
+            stage("SonarQube analysis") {
+                container('maven') {
+                    withCredentials([string(credentialsId: 'sonar', variable: 'TOKEN')]) {
+                        withSonarQubeEnv('sonar') {
+                            sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar " +
+                                    "-f pom.xml " +
+                                    "-Dsonar.organization=${pipelineParams.sonarOrganization} " +
+                                    "-Dsonar.projectKey=${pipelineParams.sonarProjectKey} " +
+                                    "-Dsonar.login=$TOKEN"
+                        }
+                    }
+                }
+            }
+
+            stage("Quality Gate") {
+                timeout(time: 1, unit: 'HOURS') {
+                    def qg = waitForQualityGate()
+                    if (qg.status != 'OK') {
+                        error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                    }
+                }
+            }
 
 
         }
