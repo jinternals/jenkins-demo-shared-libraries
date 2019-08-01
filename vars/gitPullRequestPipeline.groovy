@@ -55,10 +55,8 @@ def call(Map pipelineParams) {
             }
             
             stage("build & SonarQube analysis") {
-              node {
-                  withSonarQubeEnv('My SonarQube Server') {
-                     sh 'mvn clean package sonar:sonar'
-                  }
+              withSonarQubeEnv('My SonarQube Server') {
+                 sh 'mvn clean package sonar:sonar'
               }
             }
 
