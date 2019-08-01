@@ -58,10 +58,10 @@ def call(Map pipelineParams) {
                 container('maven') {
                       withCredentials([string(credentialsId: 'sonar', variable: 'TOKEN')]) {
                           withSonarQubeEnv('sonar') { 
-                              sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar ' + 
-                              '-f pom.xml ' +
-                              '-Dsonar.projectKey=com.jinternals:spring-micrometer-demo' +
-                              '-Dsonar.login=$TOKEN'
+                              sh "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar " + 
+                              "-f pom.xml " +
+                              "-Dsonar.projectKey=com.jinternals:spring-micrometer-demo" +
+                              "-Dsonar.login=$TOKEN"
                          }
                       }
                 }
