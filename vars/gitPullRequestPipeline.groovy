@@ -42,15 +42,22 @@ def call(Map pipelineParams) {
                                                    url: "${pipelineParams.gitRepository}"]]
                        ])
 
-                    
+                   /* 
                      container('git'){
                         sh "pwd"
                         sh "git status"
                         sh "git diff --name-only ${ghprbSourceBranch} ${ghprbTargetBranch}"
-                     }
+                     }*/
                               
                 } catch (e) {
                     throw e;
+                }
+            }
+            
+            
+            stage('Build Artifacts') {
+                container('maven') {
+                    sh "mvn clean install"
                 }
             }
 
