@@ -24,7 +24,7 @@ def call(Map pipelineParams) {
 
             stage('Checkout Pull Request') {
                 try {
-                    currentBuild.displayName = "# PR ${ghprbPullId}"
+                    currentBuild.displayName = "# PR-${ghprbPullId}"
 
                     checkout([
                             $class                           : 'GitSCM',
