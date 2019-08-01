@@ -42,7 +42,7 @@ def call(Map pipelineParams) {
 
                     
  
-                  sh "git diff --name-only"
+                  git diff --name-only
                               
                 } catch (e) {
                     throw e;
