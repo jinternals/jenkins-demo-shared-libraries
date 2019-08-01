@@ -41,13 +41,15 @@ def call(Map pipelineParams) {
                        ])
 
                     
+ 
                     if (env.CHANGE_ID) {
                         for (file in pullRequest.files) {
                            println "${file.filename}"
                         }
                     }
-                   
-                                                  
+                    sh "${pullRequest}"
+                    sh "${pullRequest.files}"
+                              
                 } catch (e) {
                     throw e;
                 }
