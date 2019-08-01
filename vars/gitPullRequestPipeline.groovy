@@ -15,7 +15,7 @@ def call(Map pipelineParams) {
             volumes: [
                     hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock'),
                     hostPathVolume(hostPath: '/root/.m2', mountPath: '/root/.m2'),
-                    hostPathVolume(hostPath: '/root/.sonar/cache', mountPath: '/root/.sonar/cache'),
+                    hostPathVolume(hostPath: '/root/.sonar', mountPath: '/root/.sonar'),
 
                
             ]) {
