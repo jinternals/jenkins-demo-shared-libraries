@@ -21,15 +21,25 @@ def call(Map pipelineParams) {
                 try {
                     currentBuild.displayName = "# PR ${ghprbPullId}"
 
-                    checkout([$class: 'GitSCM',
+                   /* checkout([$class: 'GitSCM',
                               branches: [[name: "FETCH_HEAD"]],
                               doGenerateSubmoduleConfigurations: false,
                               extensions: [[$class: 'LocalBranch'], [$class: 'RelativeTargetDirectory', relativeTargetDir: "jinternals"]],
                               userRemoteConfigs: [[refspec: "+refs/pull/${ghprbPullId}/head:refs/remotes/origin/PR-${ghprbPullId} +refs/heads/master:refs/remotes/origin/master",
                                                    credentialsId:  "${pipelineParams.gitCredentialId}",
                                                    url: "${pipelineParams.gitRepository}"]]
-                    ])
+                    ])*/
                     
+                     checkout([
+                              $class: 'GitSCM',
+                              branches: [[name: "${sha1}"]],
+                              doGenerateSubmoduleConfigurations: false,
+                              extensions: [[$class: 'CloneOption', noTags: false, shallow: false, depth: 0, reference: '']],
+                              userRemoteConfigs: [[refspec: "+refs/pull/*:refs/remotes/origin/pr/*",
+                                                   credentialsId:  "${pipelineParams.gitCredentialId}",
+                                                   url: "${pipelineParams.gitRepository}"]]
+                       ])
+
                     
                     if (env.CHANGE_ID) {
                         for (file in pullRequest.files) {
