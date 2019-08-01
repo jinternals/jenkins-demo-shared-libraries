@@ -29,8 +29,14 @@ def call(Map pipelineParams) {
                                                    credentialsId:  "${pipelineParams.gitCredentialId}",
                                                    url: "${pipelineParams.gitRepository}"]]
                     ])
+                    
+                    
+                    if (env.CHANGE_ID) {
+                        for (file in pullRequest.files) {
+                           println "${file.filename}"
+                        }
+                    }
                    
-                    sh "git diff --dirstat=files,0 HEAD~1"
                                                   
                 } catch (e) {
                     throw e;
