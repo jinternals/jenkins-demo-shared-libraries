@@ -41,7 +41,7 @@ def call(Map pipelineParams) {
                 }
             }
 
-            stage('Build & Test') {
+            stage('Build & Test source code') {
                 try {
                     container('maven') {
                         sh "mvn clean install"
