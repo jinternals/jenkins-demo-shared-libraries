@@ -19,7 +19,7 @@ def call(Map pipelineParams) {
 
             stage('Checkout') {
                 try {
-                    git branch:  "${pipelineParams.gitBranch}", credentialsId: "${pipelineParams.gitCredentialId}", url: "${pipelineParams.gitRepository}"
+                    git branch: "${pipelineParams.gitBranch}", credentialsId: "${pipelineParams.gitCredentialId}", url: "${pipelineParams.gitRepository}"
                 } catch (e) {
                     throw e;
                 }
@@ -29,38 +29,54 @@ def call(Map pipelineParams) {
                 try {
                     versionNumber = generateVersion(pom: 'pom.xml')
                     currentBuild.displayName = "# ${versionNumber}"
-                    createGitTag(pipelineParams,versionNumber)
+                    createGitTag(pipelineParams, versionNumber)
                 } catch (e) {
                     throw e;
                 }
             }
 
             stage('Build Artifacts') {
-                container('maven') {
-                    sh "mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${versionNumber}"
-                    sh "mvn clean package"
+                try {
+                    container('maven') {
+                        sh "mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${versionNumber}"
+                        sh "mvn clean package"
+                    }
+                } catch (e) {
+                    throw e;
                 }
             }
 
             stage('Publish Artifacts') {
-                container('maven') {
-                    //sh "mvn dependency:purge-local-repository -DactTransitively=false -DreResolve=false --fail-at-end"
-                }
-            }
-
-            stage ('Docker build and push') {
-                container ('docker') {
-                    def repository = "${pipelineParams.dockerRepository}"
-
-                     withDockerRegistry(credentialsId: "${pipelineParams.dockerCredentialId}", url: "${pipelineParams.dockerRegistry}") {
-                        sh "docker build -t ${repository}:${versionNumber} -t ${repository}:latest  -f target/docker-resources/Dockerfile target/"
-                        sh "docker push ${repository}"
+                try {
+                    container('maven') {
+                        //sh "mvn dependency:purge-local-repository -DactTransitively=false -DreResolve=false --fail-at-end"
                     }
+                } catch (e) {
+                    throw e;
                 }
             }
-            
-            stage ('Trigger Ci Deployment') {
-                build job: "${pipelineParams.name}-ci-deployment", parameters: [string(name: 'APP_VERSION', value: "${versionNumber}")], wait: false           
+
+            stage('Docker build and push') {
+                try {
+                    container('docker') {
+                        def repository = "${pipelineParams.dockerRepository}"
+
+                        withDockerRegistry(credentialsId: "${pipelineParams.dockerCredentialId}", url: "${pipelineParams.dockerRegistry}") {
+                            sh "docker build -t ${repository}:${versionNumber} -t ${repository}:latest  -f target/docker-resources/Dockerfile target/"
+                            sh "docker push ${repository}"
+                        }
+                    }
+                } catch (e) {
+                    throw e;
+                }
+            }
+
+            stage('Trigger Ci Deployment') {
+                try {
+                    build job: "${pipelineParams.name}-ci-deployment", parameters: [string(name: 'APP_VERSION', value: "${versionNumber}")], wait: false
+                } catch (e) {
+                    throw e;
+                }
             }
         }
     }
