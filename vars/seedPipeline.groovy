@@ -7,7 +7,7 @@ def call(Map pipelineParams) {
             cloud: 'jenkins',
             containers: [
                     containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:latest', args: '${computer.jnlpmac} ${computer.name}'),
-                    containerTemplate(name: 'jenkins-job-builder', image: 'jinternals/jenkins-job-builder', ttyEnabled: true, command: 'cat')
+                    containerTemplate(name: 'jenkins-job-builder', image: 'homelabs.jfrog.io/homelabs-docker/jenkins-job-builder:latest', ttyEnabled: true, command: 'cat')
             ],
             volumes: [
                     secretVolume(secretName: 'jenkins-job-builder', mountPath: '/etc/jenkins_jobs/')
