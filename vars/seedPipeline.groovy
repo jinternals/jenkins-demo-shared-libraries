@@ -6,7 +6,7 @@ def call(Map pipelineParams) {
             label: label,
             cloud: 'jenkins',
             containers: [
-                    containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:latest', args: '${computer.jnlpmac} ${computer.name}'),
+                    containerTemplate(name: 'jnlp', image: 'jenkins/inbound-agent:latest', args: '${computer.jnlpmac} ${computer.name}'),
                     containerTemplate(name: 'jenkins-job-builder', image: 'homelabs.jfrog.io/homelabs-docker/jenkins-job-builder:latest', ttyEnabled: true, command: 'cat')
             ],
             volumes: [
